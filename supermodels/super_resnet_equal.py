@@ -352,7 +352,6 @@ class SuperResNet(nn.Module):
         self.inplanes = 64
 
         self.mem = SuperParams(mem_size, recurrent=recurrent_params)
-        self.mem.finalize(self.training, _resume = _resume, save_name = save_name)
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
                                bias=False)
@@ -365,6 +364,8 @@ class SuperResNet(nn.Module):
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2, norm_layer=norm_layer)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(512 * block.expansion, num_classes)
+        
+        self.mem.finalize(self.training, _resume = _resume, save_name = save_name)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
